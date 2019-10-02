@@ -68,8 +68,7 @@ public class Partie {
 
 				gagnant.setFinalScore(gagnant.getFinalScore() + 1);
 				if ((gagnant.getFinalScore() == 6 && perdant.getFinalScore() <= 4)
-						|| (gagnant.getFinalScore() == 7
-								&& (gagnant.getFinalScore() - perdant.getFinalScore() == 1)))
+						|| (gagnant.getFinalScore() > 6 && (gagnant.getFinalScore() - perdant.getFinalScore() >= 2))) 
 
 				{
 					gagnantJeu = gagnant;

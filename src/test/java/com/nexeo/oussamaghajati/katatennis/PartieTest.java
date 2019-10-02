@@ -22,6 +22,7 @@ public class PartieTest {
     Partie partie;
     List<Joueur> nadalRemporteSet;
     List<Joueur> federerRemporteSet;
+    Joueur noWinner = null;
 
 
     @Before
@@ -189,6 +190,7 @@ public class PartieTest {
 
         assertThat(nadal, hasProperty("finalScore", is(6)));
         assertThat(federer, hasProperty("finalScore", is(5)));
+        assertThat(partie, hasProperty("gagnantJeu", is(noWinner)));
     	
     }
     
@@ -210,27 +212,41 @@ public class PartieTest {
 		playTennisSet(partie, federerRemporteSet);
 		playTennisSet(partie, federerRemporteSet);
 
-
         assertThat(nadal, hasProperty("finalScore", is(6)));
         assertThat(federer, hasProperty("finalScore", is(7)));
+        assertThat(partie, hasProperty("gagnantJeu", is(noWinner)));
     	
-    
-
     }
     
+ 
+    
     @Test
-    public void SprintTwoUserStoryOne() {
+    public void SprintTwoUserStoryTwo() {
     	
+    	
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
 		playTennisSet(partie, federerRemporteSet);
 		playTennisSet(partie, nadalRemporteSet);
 		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
 		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
 		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
 		playTennisSet(partie, nadalRemporteSet);
 		playTennisSet(partie, nadalRemporteSet);
 
 
-    	 assertThat(partie, hasProperty("gagnantJeu", is(nadal)));
+        assertThat(nadal, hasProperty("finalScore", is(9)));
+        assertThat(federer, hasProperty("finalScore", is(7)));
+
+    	assertThat(partie, hasProperty("gagnantJeu", is(nadal)));
+
 
     }
 
