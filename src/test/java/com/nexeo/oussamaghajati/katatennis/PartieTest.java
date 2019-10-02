@@ -20,125 +20,231 @@ public class PartieTest {
     Joueur nadal;
     Joueur federer;
     Partie partie;
+    List<Joueur> nadalRemporteSet;
+    List<Joueur> federerRemporteSet;
+
 
     @Before
     public void beforePartieTest() {
         nadal = new Joueur("Nadal");
         federer = new Joueur("Federer");
         partie = new Partie(nadal, federer);
+    	// nadal remporte le set
+    	nadalRemporteSet = Arrays.asList(nadal, nadal, federer, nadal, federer, federer, nadal,nadal);
+
+    	// federer remporte le set
+    	 federerRemporteSet = Arrays.asList(nadal, nadal, federer, nadal, federer, federer,federer, federer);
+        
     }
 
     @Test
     public void loveShouldBeDescriptionForScore0() {
-        assertThat(partie, hasProperty("score", is("love, love")));
+        assertThat(nadal, hasProperty("currentScore", is("0")));
+        assertThat(federer, hasProperty("currentScore", is("0")));
     }
 
     @Test
     public void loveFifteenShouldBeDescriptionForScore1() {
-        federer.winBall();
-        assertThat(partie, hasProperty("score", is("love, fifteen")));
+
+       partie.play(nadal);
+       assertThat(nadal, hasProperty("currentScore", is("15")));
+       assertThat(federer, hasProperty("currentScore", is("0")));
+
     }
 
     @Test
     public void thirtyLoveShouldBeDescriptionForScore2() {
-        nadal.winBall();
-        nadal.winBall();
-        assertThat(partie, hasProperty("score", is("thirty, love")));
+    	
+        partie.play(nadal);
+        partie.play(nadal);
+        assertThat(nadal, hasProperty("currentScore", is("30")));
+        assertThat(federer, hasProperty("currentScore", is("0")));
+
     }
 
     @Test
     public void thirtyFifteenShouldBeDescriptionForScore3() {
-        nadal.winBall();
-        nadal.winBall();
-       federer.winBall();
-       assertThat(partie, hasProperty("score", is("thirty, fifteen")));
+    	
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(federer);
+        assertThat(nadal, hasProperty("currentScore", is("30")));
+        assertThat(federer, hasProperty("currentScore", is("15")));
+    	
     }
     
     
     @Test
     public void fortyFifteenShouldBeDescriptionForScore4() {
-        for(int index = 1; index <= 3; index++) {
-            nadal.winBall();
-        }
-       federer.winBall();
-       assertThat(partie, hasProperty("score", is("forty, fifteen")));
+    	
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(federer);
+        assertThat(nadal, hasProperty("currentScore", is("40")));
+        assertThat(federer, hasProperty("currentScore", is("15")));
+    	
     }
     
     @Test
     public void fortyThirtyShouldBeDescriptionForScore5() {
-        for(int index = 1; index <= 3; index++) {
-            nadal.winBall();
-        }
-       federer.winBall();
-       federer.winBall();
-       assertThat(partie, hasProperty("score", is("forty, thirty")));
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(federer);
+        partie.play(federer);
+        assertThat(nadal, hasProperty("currentScore", is("40")));
+        assertThat(federer, hasProperty("currentScore", is("30")));
     }
     
     @Test
     public void fortyFortyShouldBeDescriptionForScore6() {
-        for(int index = 1; index <= 3; index++) {
-            nadal.winBall();
-        }
-        for(int index = 1; index <= 3; index++) {
-            federer.winBall();
-        }
-
-       assertThat(partie, hasProperty("score", is("deuce")));
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(federer);
+        partie.play(federer);
+        partie.play(federer);
+        assertThat(nadal, hasProperty("currentScore", is("40")));
+        assertThat(federer, hasProperty("currentScore", is("40")));
     }
     
     
     @Test
     public void advantageShouldBeDescriptionWhenLeastThreePointsHaveNeenScoredByEachSideAndJoueurHasOnePointMoreThanHisOpponent() {
-        for(int index = 1; index <= 3; index++) {
-            nadal.winBall();
-        }
-        for(int index = 1; index <= 4; index++) {
-            federer.winBall();
-        }
-        assertThat(partie, hasProperty("score", is("advantage Federer")));
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(federer);
+        partie.play(federer);
+        partie.play(federer);
+        partie.play(federer);
+        assertThat(nadal, hasProperty("currentScore", is("40")));
+        assertThat(federer, hasProperty("currentScore", is("ADV")));
     }
 
     @Test
     public void deuceShouldBeDescriptionWhenAtLeastThreePointsHaveBeenScoredByEachJoueurAndTheScoresAreEqual() {
-        for(int index = 1; index <= 3; index++) {
-            nadal.winBall();
-        }
-        for(int index = 1; index <= 3; index++) {
-            federer.winBall();
-        }
-        assertThat(partie, hasProperty("score", is("deuce")));
-        nadal.winBall();
-        assertThat(partie, hasProperty("score", is(not("deuce"))));
-        federer.winBall();
-        assertThat(partie, hasProperty("score", is("deuce")));
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(federer);
+        partie.play(federer);
+        partie.play(federer);
+        partie.play(nadal);
+        partie.play(federer);
+        assertThat(nadal, hasProperty("currentScore", is("DEUCE")));
+        assertThat(federer, hasProperty("currentScore", is("DEUCE")));
     }
 
     @Test
     public void partieShouldBeWonByTheFirstJoueurToHaveWonAtLeastFourPointsInTotalAndWithAtLeastTwoPointsMoreThanTheOpponent() {
-        for(int index = 1; index <= 4; index++) {
-            nadal.winBall();
-        }
-        for(int index = 1; index <= 3; index++) {
-            federer.winBall();
-        }
-        assertThat(partie, hasProperty("score", is(not("Nadal won"))));
-        assertThat(partie, hasProperty("score", is(not("Federer won"))));
-        nadal.winBall();
-        assertThat(partie, hasProperty("score", is("Nadal won")));
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(nadal);
+        partie.play(federer);
+        partie.play(federer);
+        partie.play(federer);
+        partie.play(nadal);
+        partie.play(federer);
+        partie.play(federer);
+        partie.play(federer);
+        assertThat(federer, hasProperty("currentScore", is("Win game")));
     }
-    
-
     
     @Test
-    public void SprintOneUserStoryTwo() {
+    public void gameShouldBeWonByTheFirstJoueurToHaveWonSixSetsInTotalAndWithAtLeastTwoPointsMoreThanTheOpponent() {
     	
-    	List<Joueur> matchScenario = Arrays.asList(federer, federer, nadal, federer, nadal, nadal, nadal,federer, federer, federer );
-    	for (Joueur player : matchScenario) {
-    		player.winBall();
-    	}
-    	assertThat(partie, hasProperty("score", is("Federer won")));
+
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+
+        assertThat(partie, hasProperty("gagnantJeu", is(nadal)));
 
     }
+
+    @Test
+    public void aNewSetIsNeeded() {
+    	
+
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+
+        assertThat(nadal, hasProperty("finalScore", is(6)));
+        assertThat(federer, hasProperty("finalScore", is(5)));
+    	
+    }
+    
+    @Test
+    public void gameShouldBeWonByTheFirstJoueurToHaveWonSevenSetsInTotal() {
+    	
+    	
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, federerRemporteSet);
+
+
+        assertThat(nadal, hasProperty("finalScore", is(6)));
+        assertThat(federer, hasProperty("finalScore", is(7)));
+    	
+    
+
+    }
+    
+    @Test
+    public void SprintTwoUserStoryOne() {
+    	
+		playTennisSet(partie, federerRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+		playTennisSet(partie, nadalRemporteSet);
+
+
+    	 assertThat(partie, hasProperty("gagnantJeu", is(nadal)));
+
+    }
+
+	private void playTennisSet(Partie partie2, List<Joueur> pointsJoueur) {
+		
+		for (Joueur joueur : pointsJoueur) {
+
+			partie2.play(joueur);
+
+		}
+		
+	}
+    
+
 
 
 }
